@@ -9,8 +9,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class FastFood extends JavaPlugin
 {
@@ -18,6 +22,7 @@ public class FastFood extends JavaPlugin
     private FoodHealth health;
     private double hungerMultiplier;
     private boolean affectHunger;
+    private HeroManager heroManager = null;
     
     public void onEnable()
     {
@@ -26,6 +31,9 @@ public class FastFood extends JavaPlugin
         
         // Config-file.
         setupConfig();
+        
+        // Heroes
+        setupHeroes();
         
         // Listeners.
         new FFEntityListener(this);
@@ -59,6 +67,19 @@ public class FastFood extends JavaPlugin
         hungerMultiplier = config.getDouble("settings.hunger-multiplier", 0D);
     }
     
+    private void setupHeroes()
+    {
+        Plugin heroes = this.getServer().getPluginManager().getPlugin("Heroes");
+        if (heroes == null) return;
+        
+        heroManager = ((Heroes) heroes).getHeroManager();
+    }
+    
+    public HeroManager getHeroManager()
+    {
+        return heroManager;
+    }
+    
     private Configuration getConfigFromFile(File dir, String filename)
     {
         if (!dir.exists()) dir.mkdir();
@@ -72,6 +93,34 @@ public class FastFood extends JavaPlugin
         config.save();
         return config;
     }
+    
+    public boolean affectHunger()
+    {
+        return affectHunger;
+    }
+    
+    public double getHungerMultiplier()
+    {
+        return hungerMultiplier;
+    }
+    
+    public Configuration getConfig()
+    {
+        return config;
+    }
+    
+    public FoodHealth getFoodHealth()
+    {
+        return health;
+    }
+    
+    public void tell(CommandSender p, String msg)
+    {
+        p.sendMessage(ChatColor.YELLOW + "[FastFood] " + ChatColor.WHITE + msg);
+    }
+    
+    public static void info(String msg) { Bukkit.getServer().getLogger().info("[FastFood] " + msg); }
+    public static void warning(String msg) { Bukkit.getServer().getLogger().warning("[FastFood] " + msg); }
     
     private String getHeader(String filename)
     {
@@ -95,33 +144,5 @@ public class FastFood extends JavaPlugin
             "#     /ff sethealth <material> <value>\n" +
             "#";
         else return "# FastFood v" + getDescription().getVersion() + "\n";
-    }
-    
-    public boolean affectHunger()
-    {
-        return affectHunger;
-    }
-    
-    public double getHungerMultiplier()
-    {
-        return hungerMultiplier;
-    }
-    
-    public Configuration getConfig()
-    {
-        return config;
-    }
-    
-    public FoodHealth getFoodHealth()
-    {
-        return health;
-    }
-    
-    public static void info(String msg) { Bukkit.getServer().getLogger().info("[FastFood] " + msg); }
-    public static void warning(String msg) { Bukkit.getServer().getLogger().warning("[FastFood] " + msg); }
-    
-    public void tell(CommandSender p, String msg)
-    {
-        p.sendMessage(ChatColor.YELLOW + "[FastFood] " + ChatColor.WHITE + msg);
     }
 }

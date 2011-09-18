@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
+import com.herocraftonline.dev.heroes.persistence.Hero;
+
 public class FFPlayerListener extends PlayerListener
 {
     private FastFood plugin;
@@ -56,6 +58,13 @@ public class FFPlayerListener extends PlayerListener
         // Set health.
         int newHealth = Math.min(20, p.getHealth() + health);
         p.setHealth(newHealth);
+        
+        // If Heroes is enabled, play nice with it.
+        if (plugin.getHeroManager() != null)
+        {
+            Hero hero = plugin.getHeroManager().getHero(p);
+            hero.setHealth(newHealth * hero.getMaxHealth() / 20);
+        }
 
         // Set hunger
         if (plugin.affectHunger())
