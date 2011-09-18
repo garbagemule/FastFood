@@ -1,0 +1,18 @@
+name: FastFood
+main: garbagemule.FastFood.FastFood
+version: 0.1
+commands:
+    ff:
+        description: Base command for FastFood
+    fastfood:
+        description: Base command for FastFood
+permissions:
+    fastfood.autoregain:
+        description: Allows regaining health over time (default in 1.8)
+        default: true
+    fastfood.instanteat:
+        description: Allows instant eating foods for instant healing (default pre-1.8)
+        default: false
+    fastfood.admin:
+        description: Gives access to all the FastFood commands
+        default: op

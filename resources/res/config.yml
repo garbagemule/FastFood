@@ -1,0 +1,9 @@
+# FastFood Config File
+#
+# This file contains all the settings that FastFood uses. All of them can be
+# altered in-game by typing the following command.
+#     /ff settings <setting> <value>
+#
+settings:
+    affect-hunger: true
+    hunger-multiplier: 0.5
