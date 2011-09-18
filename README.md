@@ -1,6 +1,8 @@
-﻿FastFood
+﻿Bukkit plugin that allows server hosts to enable permissions-based pre-1.8 food handling features, i.e. instant eating/healing. The health values can be fully customized (increase or decrease health), and non-food items can even be added, so if you want to hurt your players when they try to eat arrows or swords, you can do so!
 
-Bukkit plugin that allows server hosts to enable permissions-based pre-1.8 food handling features, i.e. instant eating/healing. The health values can be fully customized (increase or decrease health), and non-food items can even be added, so if you want to hurt your players when they try to eat arrows or swords, you can do so!
+## Foods and health values (foodhealth.yml)
+
+The `foodhealth.yml` file contains all the food items that can be instantly eaten, and how much health they heal (or damage). The names MUST be the (http://jd.bukkit.org/apidocs/org/bukkit/Material.html)[Material type names] of the items. That is, if you want a player to regain 8 health points (4 hearts) when eating a "steak", you must use the Material type name of steak, which is "cooked_beef", so in the `foodhealth.yml` file, you would simply write `cooked_beef: 8`.
 
 ## Permissions
 
@@ -34,10 +36,10 @@ Below are the FastFood settings, as found in the `config.yml` file. They can be 
     Setting                      Description
     -----------------------------------------------------------------------------------------------
     affect-hunger: true|false    If true, instant eating food also affects the food bar, i.e. when
-                                 a player with the `fastfood.instanteat` permission eats a food
+                                 a player with the 'fastfood.instanteat' permission eats a food
                                  and either loses or gains health, they will also have their food
                                  bar de- or increased.
     hunger-multiplier: <value>   The value is multiplied by the health of the food eaten, so if
-                                 the multiplier is `0.5` and the health value is `4`, the food bar
-                                 will increase by `2`.
+                                 the multiplier is 0.5 and the health value is 4, the food bar
+                                 will increase by 2.
 
