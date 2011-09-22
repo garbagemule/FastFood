@@ -125,6 +125,24 @@ public class FFCommands implements CommandExecutor
             return true;
         }
         
+        else if (arg1.equals("food"))
+        {
+            int food = Integer.parseInt(arg2);
+            
+            Player p = (Player) sender;
+            p.setFoodLevel(food);
+            return true;
+        }
+        
+        else if (arg1.equals("health"))
+        {
+            int health = Integer.parseInt(arg2);
+            
+            Player p = (Player) sender;
+            p.setHealth(health);
+            return true;
+        }
+        
         return false;
     }
     

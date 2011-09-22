@@ -10,11 +10,12 @@ The following permissions can be set using a permissions plugin such as Permissi
 
     Permission            Default     Description
     -----------------------------------------------------------------------------------------------
+    fastfood.nostarve     false       With this, players won't take damage from starvation.
     fastfood.instanteat   false       Allows players to instant eat foods.
     fastfood.autoregain   true        Allows players to auto-regain health with a full food bar.
     fastfood.admin        op          Access to the FastFood commands.
 
-Giving players `fastfood.instanteat: true` and `fastfood.autoregion: false` will make the food and health system work like pre-1.8, i.e. health can only be regained from eating food, and the food bar doesn't do anything.
+Giving players `fastfood.nostarve: true`, `fastfood.instanteat: true` and `fastfood.autoregain: false` will make the food and health system work like pre-1.8, i.e. health can only be regained from eating food, and the food bar doesn't do anything.
 
 ## Commands
 
