@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.plugin.PluginManager;
 
 public class FFEntityListener extends EntityListener
@@ -43,9 +44,9 @@ public class FFEntityListener extends EntityListener
     {
         if (!(event.getEntity() instanceof Player))
             return;
-        
+
         Player p = (Player) event.getEntity();
-        if (!p.hasPermission("fastfood.autoregain"))
+        if (event.getRegainReason() == RegainReason.SATIATED && !p.hasPermission("fastfood.autoregain"))
             event.setCancelled(true);
     }
 }

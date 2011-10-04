@@ -1,6 +1,6 @@
 name: FastFood
 main: garbagemule.FastFood.FastFood
-version: 0.2
+version: 0.3
 commands:
     ff:
         description: Base command for FastFood
