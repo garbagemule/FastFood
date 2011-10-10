@@ -37,28 +37,60 @@ public class FFPlayerListener extends PlayerListener
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         Action a = event.getAction();
-        if (!event.hasItem() || a == Action.LEFT_CLICK_AIR || a == Action.LEFT_CLICK_BLOCK)
+        
+        // If the player left clicks, return
+        if (a == Action.LEFT_CLICK_AIR || a == Action.LEFT_CLICK_BLOCK)
             return;
-
-        // If the food doesn't have a value, return.
-        int typeId = event.getItem().getTypeId();
-        int health = foodHealth.getHealth(typeId);
-        if (health == 0)
+        
+        // The event must either have an item or a block
+        if (!event.hasItem() && !event.hasBlock())
             return;
-
-        // If the player has no permission, return.
+        
+        // Check if the player has permission
         Player p = event.getPlayer();
         if (!p.hasPermission("fastfood.instanteat"))
             return;
-
-        // Don't allow the player to eat if health is full, or if it will kill them!
-        if ((health > 0 && p.getHealth() == 20) || (health < 0 && p.getHealth() + health <= 0))
+        
+        // If they do, handle either cake placement or food consumption.
+        if (event.hasBlock() && event.getClickedBlock().getTypeId() == 92)
+            onPlayerRightClickCake(p, event);
+        else
+            onPlayerRightClick(p, event);
+    }
+    
+    private void onPlayerRightClickCake(Player p, PlayerInteractEvent event)
+    {
+        // If cake isn't defined, or if the player can't eat, return
+        int health = foodHealth.getHealth(354);
+        if (health == 0 || !canEat(p, health))
             return;
-
-        // Set health.
+        
+        // Set the health.   
+        setHealth(p, health);
+    }
+    
+    private void onPlayerRightClick(Player p, PlayerInteractEvent event)
+    {
+        // If the item has no health value, return
+        int typeId = event.getItem().getTypeId();
+        int health = foodHealth.getHealth(typeId);
+        if (health == 0 || !canEat(p, health))
+            return;
+        
+        // Set the health.
+        setHealth(p, health);
+        
+        // Deny the eat event, and remove the item.
+        event.setUseItemInHand(Result.DENY);
+        p.getInventory().removeItem(new ItemStack(typeId, 1));
+    }
+    
+    private void setHealth(Player p, int health)
+    {
+        // Set health.        
         int newHealth = Math.min(20, p.getHealth() + health);
         p.setHealth(newHealth);
-        
+
         // If Heroes is enabled, play nice with it.
         if (plugin.getHeroManager() != null)
         {
@@ -73,9 +105,21 @@ public class FFPlayerListener extends PlayerListener
             hunger = hunger > 0D ? Math.max(1D, hunger) : Math.min(-1D, hunger);
             p.setFoodLevel(p.getFoodLevel() + (int) hunger);
         }
-
-        // Deny the eat event, and remove the item.
-        event.setUseItemInHand(Result.DENY);
-        p.getInventory().removeItem(new ItemStack(typeId, 1));
+    }
+    
+    /**
+     * Check if the player either has full HP and thus won't benefit from healthy food,
+     * or will die from eating unhealthy food.
+     * @param p The player
+     * @param value The health value (can be negative)
+     * @return true, if the player can eat the food without problems, false otherwise
+     */
+    private boolean canEat(Player p, int value)
+    {
+        if (value > 0 && p.getHealth() >= 20)
+            return false;
+        if (value < 0 && p.getHealth() + value <= 0)
+            return false;
+        return true;
     }
 }

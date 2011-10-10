@@ -33,6 +33,15 @@ public class FFCommands implements CommandExecutor
         String arg2 = args.length > 1 ? args[1].toLowerCase() : null;
         String arg3 = args.length > 2 ? args[2].toLowerCase() : null;
         
+        if (arg1 == null)
+        {
+            plugin.tell(sender, "Usage:");
+            plugin.tell(sender, "- /ff sethealth <material> <value>");
+            plugin.tell(sender, "- /ff gethealth <material>");
+            plugin.tell(sender, "- /ff settings <setting> <value>");
+            return true;
+        }
+        
         if (arg1.equals("sethealth"))
         {
             // Require specific format.

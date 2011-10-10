@@ -1,12 +1,19 @@
 name: FastFood
 main: garbagemule.FastFood.FastFood
-version: 0.3
+version: 0.4
 commands:
     ff:
         description: Base command for FastFood
     fastfood:
         description: Base command for FastFood
 permissions:
+    fastfood:
+        description: Reverts the food and health restoration to pre-1.8 in one node!
+        default: false
+        children:
+            fastfood.instanteat: true
+            fastfood.autoregain: false
+            fastfood.nostarve: true
     fastfood.instanteat:
         description: Allows instant eating foods for instant healing (default pre-1.8)
         default: false
