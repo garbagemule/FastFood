@@ -4,6 +4,7 @@ import garbagemule.FastFood.FastFood;
 import garbagemule.FastFood.FoodHealth;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -54,18 +55,24 @@ public class FFPlayerListener extends PlayerListener
         // If they do, handle either cake placement or food consumption.
         if (event.hasBlock() && event.getClickedBlock().getTypeId() == 92)
             onPlayerRightClickCake(p, event);
-        else
+        else if (event.hasItem())
             onPlayerRightClick(p, event);
     }
     
     private void onPlayerRightClickCake(Player p, PlayerInteractEvent event)
     {
+        // If right-clicking with cake, return.
+        if (event.hasItem() && event.getItem().getTypeId() == 92)
+            return;
         // If cake isn't defined, or if the player can't eat, return
         int health = foodHealth.getHealth(354);
         if (health == 0 || !canEat(p, health))
             return;
         
-        // Set the health.   
+        // Eat the cake.
+        eatCake(event.getClickedBlock());
+        
+        // Set the health.
         setHealth(p, health);
     }
     
@@ -105,6 +112,18 @@ public class FFPlayerListener extends PlayerListener
             hunger = hunger > 0D ? Math.max(1D, hunger) : Math.min(-1D, hunger);
             p.setFoodLevel(p.getFoodLevel() + (int) hunger);
         }
+    }
+    
+    private void eatCake(Block cake)
+    {
+        // Grab the amount of eaten slices.
+        byte eaten = cake.getData();
+        
+        // If this is the last piece, remove the cake.
+        if (eaten == 5)
+            cake.setTypeId(0);
+        else
+            cake.setData((byte) (eaten + 1));
     }
     
     /**

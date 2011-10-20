@@ -17,7 +17,7 @@ public class FFCommands implements CommandExecutor
     {
         this.plugin = plugin;
         this.health = plugin.getFoodHealth();
-        this.config = plugin.getConfig();
+        this.config = plugin.getFFConfig();
     }
     
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)

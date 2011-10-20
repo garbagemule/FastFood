@@ -104,7 +104,7 @@ public class FastFood extends JavaPlugin
         return hungerMultiplier;
     }
     
-    public Configuration getConfig()
+    public Configuration getFFConfig()
     {
         return config;
     }
