@@ -1,6 +1,6 @@
 package garbagemule.FastFood;
 
-import java.io.File;
+import java.io.*;
 
 import garbagemule.FastFood.util.Files;
 import garbagemule.FastFood.listeners.*;
@@ -11,14 +11,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.*;
+import org.bukkit.configuration.file.*;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 
 public class FastFood extends JavaPlugin
 {
-    private Configuration config, healthConfig;
+    private FileConfiguration config, healthConfig;
+    private File configFile, healthConfigFile;
     private FoodHealth health;
     private double hungerMultiplier;
     private boolean affectHunger;
@@ -40,7 +42,7 @@ public class FastFood extends JavaPlugin
         new FFPlayerListener(this, health);
         
         // Commands
-        CommandExecutor commandExecutor = new FFCommands(this); 
+        CommandExecutor commandExecutor = new FFCommands(this, configFile, config); 
         getCommand("ff").setExecutor(commandExecutor); 
         getCommand("fastfood").setExecutor(commandExecutor);
         
@@ -55,14 +57,14 @@ public class FastFood extends JavaPlugin
     private void setupHealthConfig()
     {
         healthConfig = getConfigFromFile(getDataFolder(), "foodhealth.yml");
-        
-        health = new FoodHealth(healthConfig);
+        healthConfigFile = new File(getDataFolder(), "foodhealth.yml");
+        health = new FoodHealth(healthConfigFile, healthConfig);
     }
     
     private void setupConfig()
     {
         config = getConfigFromFile(getDataFolder(), "config.yml");
-        
+        configFile = new File(getDataFolder(), "config.yml");
         affectHunger     = config.getBoolean("settings.affect-hunger", false);
         hungerMultiplier = config.getDouble("settings.hunger-multiplier", 0D);
     }
@@ -80,18 +82,27 @@ public class FastFood extends JavaPlugin
         return heroManager;
     }
     
-    private Configuration getConfigFromFile(File dir, String filename)
+    private FileConfiguration getConfigFromFile(File dir, String filename)
     {
         if (!dir.exists()) dir.mkdir();
         
         Files.extract(filename, dir);
         File file = new File(dir, filename);
         
-        Configuration config = new Configuration(file);
-        config.load();
-        config.setHeader(getHeader(filename));
-        config.save();
-        return config;
+        try {
+            FileConfiguration config = new YamlConfiguration();
+            config.load(file);
+            config.options().header(getHeader(filename));
+            config.save(file);
+            return config;
+		} catch(FileNotFoundException exception) {
+		    exception.printStackTrace();
+		} catch(IOException exception) {
+		    exception.printStackTrace();
+        } catch(InvalidConfigurationException exception) {
+		    exception.printStackTrace();
+        }
+        return null;
     }
     
     public boolean affectHunger()
@@ -102,11 +113,6 @@ public class FastFood extends JavaPlugin
     public double getHungerMultiplier()
     {
         return hungerMultiplier;
-    }
-    
-    public Configuration getFFConfig()
-    {
-        return config;
     }
     
     public FoodHealth getFoodHealth()

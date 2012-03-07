@@ -6,18 +6,16 @@ import garbagemule.FastFood.FoodHealth;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+import org.bukkit.event.*;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 
-public class FFPlayerListener extends PlayerListener
+public class FFPlayerListener implements Listener
 {
     private FastFood plugin;
     private FoodHealth foodHealth;
@@ -32,9 +30,10 @@ public class FFPlayerListener extends PlayerListener
     private void registerEvents()
     {
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, this, Priority.Normal, plugin);
+        pm.registerEvents(this, plugin);
     }
     
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         Action a = event.getAction();
