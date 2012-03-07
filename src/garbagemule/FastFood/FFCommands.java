@@ -1,23 +1,27 @@
 package garbagemule.FastFood;
 
+import java.io.*;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 public class FFCommands implements CommandExecutor
 {
     private FastFood plugin;
     private FoodHealth health;
-    private Configuration config;
+    private FileConfiguration config;
+    private File configFile;
     
-    public FFCommands(FastFood plugin)
+    public FFCommands(FastFood plugin, File configFile, FileConfiguration config)
     {
         this.plugin = plugin;
         this.health = plugin.getFoodHealth();
-        this.config = plugin.getFFConfig();
+        this.configFile = configFile;
+        this.config = config;
     }
     
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -126,8 +130,12 @@ public class FFCommands implements CommandExecutor
             }
             
             // Change the setting and save the config-file.
-            config.setProperty("settings." + setting.getName(), setting.cast(arg3));
-            config.save();
+            config.set("settings." + setting.getName(), setting.cast(arg3));
+            try {
+                config.save(configFile);
+            } catch(IOException exception) {
+                exception.printStackTrace();
+            }
             
             // Inform of change.
             plugin.tell(sender, "Setting changed - " + setting.getName() + ": " + arg3);
