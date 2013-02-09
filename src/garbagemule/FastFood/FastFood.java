@@ -35,13 +35,6 @@ public class FastFood extends JavaPlugin
         CommandExecutor commandExecutor = new FFCommands(this); 
         getCommand("ff").setExecutor(commandExecutor); 
         getCommand("fastfood").setExecutor(commandExecutor);
-        
-        info("v" + getDescription().getVersion() + " enabled.");
-    }
-
-    public void onDisable()
-    {
-        info("v" + getDescription().getVersion() + " disabled.");
     }
     
     private void setupHealthConfig()
