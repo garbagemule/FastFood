@@ -6,18 +6,14 @@ import garbagemule.FastFood.FoodHealth;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
 
-import com.herocraftonline.dev.heroes.hero.Hero;
-
-public class FFPlayerListener extends PlayerListener
+public class FFPlayerListener implements Listener
 {
     private FastFood plugin;
     private FoodHealth foodHealth;
@@ -26,15 +22,10 @@ public class FFPlayerListener extends PlayerListener
     {
         this.plugin     = plugin;
         this.foodHealth = foodHealth;
-        registerEvents();
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    private void registerEvents()
-    {
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, this, Priority.Normal, plugin);
-    }
-    
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         Action a = event.getAction();
@@ -97,13 +88,6 @@ public class FFPlayerListener extends PlayerListener
         // Set health.        
         int newHealth = Math.min(20, p.getHealth() + health);
         p.setHealth(newHealth);
-
-        // If Heroes is enabled, play nice with it.
-        if (plugin.getHeroManager() != null)
-        {
-            Hero hero = plugin.getHeroManager().getHero(p);
-            hero.setHealth(newHealth * hero.getMaxHealth() / 20);
-        }
 
         // Set hunger
         if (plugin.affectHunger())

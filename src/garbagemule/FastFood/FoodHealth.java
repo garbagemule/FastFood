@@ -1,24 +1,24 @@
 package garbagemule.FastFood;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
 
 import garbagemule.FastFood.util.Enums;
+import garbagemule.util.syml.SymlConfig;
 
 public class FoodHealth
 {
     private Map<Integer,Integer> map = new HashMap<Integer,Integer>();
-    private Configuration config;
+    private SymlConfig config;
     
-    public FoodHealth(Configuration config)
+    public FoodHealth(SymlConfig config)
     {
         this.config = config;
         
-        List<String> keys = config.getKeys();
+        Set<String> keys = config.getKeys();
         if (keys == null)
         {
             FastFood.warning("No keys found in foodhealth.yml.");
@@ -84,7 +84,7 @@ public class FoodHealth
     public void setHealth(Material mat, int value)
     {
         map.put(mat.getId(), value);
-        config.setProperty(mat.toString().toLowerCase(), value);
+        config.set(mat.toString().toLowerCase(), value);
         config.save();
     }
     

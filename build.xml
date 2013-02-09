@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="FastFood" default="dist" basedir=".">
+    <property name="pluginname" value="FastFood"/>
+    <property name="server" location="..\Test Environments\TE01\plugins"/>
+
+    <property name="src" location="src"/>
+    <property name="bin" location="build"/>
+    <property name="lib" location="lib"/>
+    <property name="res" location="resources"/>
+    <path id="classpath">
+        <fileset dir="${lib}" includes="**/*.jar"/>
+        <fileset dir="${res}" includes="**/*.*"/>
+    </path>
+    
+    <target name="init">
+        <mkdir dir="${bin}"/>
+    </target>
+    
+    <!-- Compile the source and put in the bin-folder -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" destdir="${bin}" includeantruntime="false" classpathref="classpath"/>
+    </target>
+    
+    <!-- Build a .jar and copy to server's plugins-folder -->
+    <target name="dist" depends="compile">
+        <delete file="${pluginname}.jar"/>
+        <jar jarfile="${pluginname}.jar">
+            <!-- Include the class-files (bin) and the resources (res) -->
+            <fileset dir="${bin}"/>
+            <fileset dir="${res}"/>
+        </jar>
+        <!-- Copy to server and clean up -->
+        <copy file="${pluginname}.jar" tofile="${server}/${pluginname}.jar"/>
+        <delete dir="${bin}"/>
+    </target>
+</project>

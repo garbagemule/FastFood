@@ -1,17 +1,18 @@
 package garbagemule.FastFood;
 
+import garbagemule.util.syml.SymlConfig;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 public class FFCommands implements CommandExecutor
 {
     private FastFood plugin;
     private FoodHealth health;
-    private Configuration config;
+    private SymlConfig config;
     
     public FFCommands(FastFood plugin)
     {
@@ -126,7 +127,7 @@ public class FFCommands implements CommandExecutor
             }
             
             // Change the setting and save the config-file.
-            config.setProperty("settings." + setting.getName(), setting.cast(arg3));
+            config.set("settings." + setting.getName(), setting.cast(arg3));
             config.save();
             
             // Inform of change.
