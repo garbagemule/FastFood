@@ -11,6 +11,7 @@
 #
 apple: 4
 golden_apple: 20
+enchanted_golden_apple: 20
 carrot_item: 1
 golden_carrot: 20
 potato_item: 1

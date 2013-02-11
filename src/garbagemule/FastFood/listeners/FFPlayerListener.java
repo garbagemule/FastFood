@@ -4,6 +4,7 @@ import garbagemule.FastFood.FastFood;
 import garbagemule.FastFood.FoodHealth;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -67,20 +68,39 @@ public class FFPlayerListener implements Listener
         setHealth(p, health);
     }
     
-    private void onPlayerRightClick(Player p, PlayerInteractEvent event)
-    {
-        // If the item has no health value, return
-        int typeId = event.getItem().getTypeId();
-        int health = foodHealth.getHealth(typeId);
-        if (health == 0 || !canEat(p, health))
+    private void onPlayerRightClick(Player p, PlayerInteractEvent event) {
+        ItemStack item = event.getItem();
+        
+        // Grab the type ID
+        int typeId = item.getTypeId();
+        
+        // Grab the health value, and be careful about golden apples
+        int health = 0;
+        if (typeId == 322 && item.getData() != null && item.getData().getData() == (byte) 1) {
+            health = foodHealth.getEnchantedGoldenApple();
+        } else {
+            health = foodHealth.getHealth(typeId);
+        }
+        
+        // No value or the player can't eat? Return
+        if (health == 0 || !canEat(p, health)) {
             return;
+        }
         
         // Set the health.
         setHealth(p, health);
         
-        // Deny the eat event, and remove the item.
+        // Deny the eat event
         event.setUseItemInHand(Result.DENY);
-        p.getInventory().removeItem(new ItemStack(typeId, 1));
+        
+        // Switch on item count
+        item = null;
+        if (event.getItem().getAmount() > 1) {
+            item = new ItemStack(event.getItem());
+            item.setAmount(item.getAmount() - 1);
+        }
+        p.getInventory().setItem(p.getInventory().getHeldItemSlot(), item);
+        //p.getInventory().removeItem(new ItemStack(typeId, 1));
     }
     
     private void setHealth(Player p, int health)
