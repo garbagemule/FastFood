@@ -106,8 +106,8 @@ public class FFPlayerListener implements Listener
     private void setHealth(Player p, int health)
     {
         // Set health.        
-        int newHealth = Math.min(20, p.getHealth() + health);
-        p.setHealth(newHealth);
+        double newHealth = Math.min(20, p.getHealth() + health);
+        p.setHealth((int) newHealth);
 
         // Set hunger
         if (plugin.affectHunger())
