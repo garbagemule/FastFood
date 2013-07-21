@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="FastFood" default="dist" basedir=".">
-    <property name="pluginname" value="FastFood"/>
-    <property name="server" location="..\Test Environments\TE01\plugins"/>
+    <property file="build.properties"/>
 
     <property name="src" location="src"/>
     <property name="bin" location="build"/>
@@ -15,6 +14,10 @@
     <target name="init">
         <mkdir dir="${bin}"/>
     </target>
+
+    <target name="copy-to-server" if="server.dir">
+        <copy file="${ant.project.name}.jar" tofile="${server.dir}/${ant.project.name}.jar" />
+    </target>
     
     <!-- Compile the source and put in the bin-folder -->
     <target name="compile" depends="init">
@@ -23,14 +26,14 @@
     
     <!-- Build a .jar and copy to server's plugins-folder -->
     <target name="dist" depends="compile">
-        <delete file="${pluginname}.jar"/>
-        <jar jarfile="${pluginname}.jar">
+        <delete file="${ant.project.name}.jar"/>
+        <jar jarfile="${ant.project.name}.jar">
             <!-- Include the class-files (bin) and the resources (res) -->
             <fileset dir="${bin}"/>
             <fileset dir="${res}"/>
         </jar>
         <!-- Copy to server and clean up -->
-        <copy file="${pluginname}.jar" tofile="${server}/${pluginname}.jar"/>
+        <antcall target="copy-to-server"/>
         <delete dir="${bin}"/>
     </target>
 </project>
