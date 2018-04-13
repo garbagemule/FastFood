@@ -58,7 +58,7 @@ public class FFPlayerListener implements Listener
             return;
         // If cake isn't defined, or if the player can't eat, return
         int health = foodHealth.getHealth(354);
-        if (health == 0 || !canEat(p, health))
+        if (health == 0 || !canEat(p, health))   
             return;
         
         // Eat the cake.
@@ -78,11 +78,23 @@ public class FFPlayerListener implements Listener
         int health = 0;
         if (typeId == 322 && item.getData() != null && item.getData().getData() == (byte) 1) {
             health = foodHealth.getEnchantedGoldenApple();
+        }else  if (typeId == 349 && item.getData() != null && item.getData().getData() == (byte) 0) {
+            health = foodHealth.getHealth(581);
+        }else  if (typeId == 349 && item.getData() != null && item.getData().getData() == (byte) 1) {
+            health = foodHealth.getHealth(583);
+        }  else  if (typeId == 349 && item.getData() != null && item.getData().getData() == (byte) 2) {
+            health = foodHealth.getHealth(582);
+        }else  if (typeId == 349 && item.getData() != null && item.getData().getData() == (byte) 3) {
+            health = foodHealth.getHealth(580);
+        }  else  if (typeId == 350 && item.getData() != null && item.getData().getData() == (byte) 0) {
+            health = foodHealth.getHealth(584);
+        } else  if (typeId == 350 && item.getData() != null && item.getData().getData() == (byte) 1) {
+            health = foodHealth.getHealth(585);
         } else {
             health = foodHealth.getHealth(typeId);
         }
         
-        // No value or the player can't eat? Return
+    // No value or the player can't eat? Return
         if (health == 0 || !canEat(p, health)) {
             return;
         }
